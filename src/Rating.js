@@ -8,15 +8,26 @@ const starBoxStyle = {
 const eachStarStyle = {
   display: "flex",
   alignItems: "center",
-  gap: "10px",
-  //   cursor: "pointer",
+  padding: "0 20px",
+  // border: "1px solid green",
 };
 
-export default function Rating({ maxRating = 5 }) {
-  //! if there is no rating props passed then default value of rating is 5
-
-  const [rating, setRating] = useState(0);
+export default function Rating({
+  maxRating = 5,
+  color = "gold",
+  size = 40,
+  message = [],
+  defaultRating = 0,
+}) {
+  //! If there is no  props passed then default value of rating will be the value provide here
+  const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
+
+  const numberStyle = {
+    color: color,
+    fontSize: size / 1.5,
+  };
+
   return (
     <div style={starBoxStyle}>
       <div style={eachStarStyle}>
@@ -27,26 +38,32 @@ export default function Rating({ maxRating = 5 }) {
             key={i + 1}
             onHoverIn={() => setTempRating(i + 1)}
             onHoverOut={() => setTempRating(0)}
+            color={color}
+            size={`${size}px`}
           />
         ))}
       </div>
 
       <div>
-        <h2>{tempRating || rating || ""}</h2>
+        <h2 style={numberStyle}>
+          {message.length === maxRating
+            ? message[tempRating ? tempRating - 1 : rating - 1]
+            : tempRating || rating || ""}
+        </h2>
       </div>
     </div>
   );
 }
 
-function Star({ onHoverIn, onHoverOut, full, onRate }) {
+function Star({ onHoverIn, onHoverOut, full, onRate, color, size }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill={full ? "#fff" : "none"}
+      fill={full ? color : "none"}
       viewBox="0 0 24 24"
-      stroke="#fff"
-      width="20"
-      height="20"
+      stroke={color}
+      width={size}
+      height={size}
       style={{ cursor: "pointer" }}
       onClick={onRate}
       onMouseEnter={onHoverIn}
