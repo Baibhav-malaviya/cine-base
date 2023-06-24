@@ -7,9 +7,9 @@ import Rating from "./Rating";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
+    <App />
     <Rating maxRating={10} color={"gold"} size={40} />
-    <Rating
+    {/* <Rating
       maxRating={5}
       color={"gold"}
       size={80}
@@ -21,6 +21,6 @@ root.render(
       size={30}
       message={["a", "b", "c", "d", "e"]}
       maxRating={12}
-    />
+    /> */}
   </React.StrictMode>
 );

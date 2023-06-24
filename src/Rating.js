@@ -20,6 +20,7 @@ export default function Rating({
   defaultRating = 0,
 }) {
   //! If there is no  props passed then default value of rating will be the value provide here
+
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
 
