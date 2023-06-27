@@ -18,10 +18,11 @@ export default function Rating({
   size = 40,
   message = [],
   defaultRating = 0,
+  onSetRating,
 }) {
   //! If there is no  props passed then default value of rating will be the value provide here
 
-  const [rating, setRating] = useState(defaultRating);
+  const [rate, setRate] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
 
   const numberStyle = {
@@ -29,13 +30,18 @@ export default function Rating({
     fontSize: size / 1.5,
   };
 
+  function handleRating(rating) {
+    onSetRating(rating);
+    setRate(rating);
+  }
+
   return (
     <div style={starBoxStyle}>
       <div style={eachStarStyle}>
         {Array.from({ length: maxRating }, (_, i) => (
           <Star
-            full={tempRating ? tempRating >= i + 1 : rating >= i + 1}
-            onRate={() => setRating(i + 1)}
+            full={tempRating ? tempRating >= i + 1 : rate >= i + 1}
+            onRate={() => handleRating(i + 1)}
             key={i + 1}
             onHoverIn={() => setTempRating(i + 1)}
             onHoverOut={() => setTempRating(0)}
@@ -48,8 +54,8 @@ export default function Rating({
       <div>
         <h2 style={numberStyle}>
           {message.length === maxRating
-            ? message[tempRating ? tempRating - 1 : rating - 1]
-            : tempRating || rating || ""}
+            ? message[tempRating ? tempRating - 1 : rate - 1]
+            : tempRating || rate || ""}
         </h2>
       </div>
     </div>
