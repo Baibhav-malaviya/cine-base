@@ -71,10 +71,11 @@ export default function App() {
 
   useEffect(
     function () {
-      async function fetchData() {
+      async function fetchMovie() {
         try {
           setIsLoading(true);
           setError(""); //it is for reset the error to "" after getting some error message
+          console.log(query);
           const res = await fetch(
             `http://www.omdbapi.com/?apikey=${KEY}&S=${query}`
           );
@@ -90,7 +91,7 @@ export default function App() {
           setError(err.message);
         }
       }
-      if (query.length >= 3) fetchData();
+      fetchMovie();
     },
     [query]
   );
@@ -123,6 +124,7 @@ export default function App() {
               onHandleBack={handleCloseMovie}
               onHandleAddMovie={handleAddMovie}
               onHandleCloseMovie={handleCloseMovie}
+              watched={watched}
             />
           ) : (
             <>
@@ -170,11 +172,16 @@ function MovieDetails({
   onHandleBack,
   onHandleAddMovie,
   onHandleCloseMovie,
+  watched,
 }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
-  console.log(userRating);
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+  const watchedUserRating = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
+
   const {
     Title: title,
     Year: year,
@@ -199,6 +206,9 @@ function MovieDetails({
       runtime: Number(runtime.split(" ")[0]),
       userRating: userRating,
     };
+
+    // setIsAdded(watched.find((el) => el.imdbID === selectedId));
+
     onHandleAddMovie(newWatchedMovie);
     onHandleCloseMovie();
   }
@@ -242,11 +252,21 @@ function MovieDetails({
 
       <section>
         <div className="rating">
-          <Rating maxRating={10} size={24} onSetRating={setUserRating} />
-          {userRating > 0 && (
-            <button className="btn-add" onClick={handleAdd}>
-              + add movie list
-            </button>
+          {!isWatched ? (
+            <>
+              <Rating maxRating={10} size={24} onSetRating={setUserRating} />
+              {userRating > 0 && (
+                <button className="btn-add" onClick={handleAdd}>
+                  + add movie list
+                </button>
+              )}
+            </>
+          ) : (
+            <p>
+              You already rated this movie with
+              {` ${watchedUserRating}`}
+              <span> 🌟</span>
+            </p>
           )}
         </div>
         <p>
@@ -380,11 +400,11 @@ function Summary({ watched }) {
         </IconInfo>
         <IconInfo>
           <span>🌟</span>
-          <span>{avgUserRating}</span>
+          <span>{avgUserRating.toFixed(2)}</span>
         </IconInfo>
         <IconInfo>
           <span>⏳</span>
-          <span>{avgRuntime} min</span>
+          <span>{avgRuntime.toFixed(2)} min</span>
         </IconInfo>
       </div>
     </div>
